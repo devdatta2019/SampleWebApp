@@ -5,9 +5,10 @@ def fullVersion
 def chartVersion
 
 pipeline {
-  agent any
-  tools { 
-         'Maven 3.8.4' 
+   agent { label 'maven' }
+   tools {
+     maven '3.8.4'
+  
         
     }
   
