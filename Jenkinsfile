@@ -58,9 +58,20 @@ pipeline {
                 }
             }
 
-   
+    stage('Test') {
+      steps {
+        script {
+          try {
+            withMaven(maven: 'maven-3', globalMavenSettingsConfig: 'Settings_Maven', options: [ artifactsPublisher(disabled: true) ]) {
+              sh "mvn test"
+              //sh "echo test will be done later"
+            } 
+          } catch (exc) {
+            echo 'Tests failed'
+            currentBuild.result = 'FAILURE'
+          }
         }
       }
-    
-  
-   
+    }
+  }
+}   
