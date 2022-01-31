@@ -8,7 +8,7 @@ pipeline {
       }
       steps {
         checkout scm
-        sh 'mvn clean package'
+        sh './mvnw -DskipTests clean package'
       }
     }
   }
