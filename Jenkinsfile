@@ -45,9 +45,6 @@ pipeline {
     
     
     stage('Compile') {
-      agent {
-        label 'maven'
-      }
       steps {
          configFileProvider([configFile(fileId: '58ecf2b0-f51f-4e7e-a89c-68b23919f95b', variable: 'Settings_Maven')]) {
                         retry(count: 3) {
@@ -62,9 +59,6 @@ pipeline {
             }
 
     stage('Test') {
-      agent {
-        label 'maven'
-      }
       steps {
         script {
           try {
