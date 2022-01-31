@@ -63,7 +63,7 @@ pipeline {
 
     stage('Test') {
       agent {
-        label 'mavenn'
+        label 'maven'
       }
       steps {
         script {
