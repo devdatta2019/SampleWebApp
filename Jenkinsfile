@@ -4,7 +4,7 @@ pipeline {
   stages {
     stage('Build') {
       agent {
-        label 'kubeagent'
+        label 'maven'
       }
       steps {
         checkout scm
