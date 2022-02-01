@@ -10,11 +10,11 @@ podTemplate(containers: [
 
     node(POD_LABEL) {
         stage('Get a Maven project') {
-            git 'https://github.com/devdatta2019/SampleWebApp.git'
+            git 'https://github.com/spring-projects/spring-petclinic.git'
             container('maven') {
                 stage('Build a Maven project') {
                     sh '''
-                    echo "maven clean compile"
+                    echo "maven build"
                     '''
                 }
             }
