@@ -1,85 +1,39 @@
-def image
-def imageTag
-def version
-def fullVersion
-def chartVersion
+podTemplate(containers: [
+    containerTemplate(
+        name: 'maven', 
+        image: 'maven:3.8.1-jdk-8', 
+        command: 'sleep', 
+        args: '30d'
+        ),
+    containerTemplate(
+        name: 'python', 
+        image: 'python:latest', 
+        command: 'sleep', 
+        args: '30d')
+  ]) {
 
-pipeline {
-  agent any
- 
-   
-
-  options {
-    buildDiscarder(logRotator(daysToKeepStr: '7', artifactDaysToKeepStr: '7'))
-  }
-
-
-
-
-  environment {
-
-    REPOSITORY_NAME = "${env.GIT_URL.tokenize('/')[3].split('\\.')[0]}"
-    REPOSITORY_OWNER = "${env.GIT_URL.tokenize('/')[2]}"
-    GIT_SHORT_REVISION = "${env.GIT_COMMIT[0..7]}"
-    DOCKER_SERVER = "${env.MSS_DOCKER_SERVER_PRD}"
-    DOCKER_CREDENTIALS = 'mss-docker-registry-prd-credentials'
-    DOCKER_ADDR =  'unix:///var/run/docker.sock' 
-    IMAGE_NAME = 'ubuntu_test'
-    REGISTRY_ADDR = 'my.registry.com'
-
-
-
-    SNAPSHOT_REPO = "${env.MSS_MAVEN_SNAPSHOTS_REPO}"
-    RELEASE_REPO = "${env.MSS_MAVEN_RELEASES_REPO}"
-    
-  }
-
-  stages {
-
-    stage('Checkout') {
-      steps {
-        deleteDir()
-        checkout scm
-      }
-    }
- 
-
-    
-    
-    stage('Compile') {
-      agent {
-        label 'maven'
-      }
-      steps {
-         configFileProvider([configFile(fileId: 'a95878d3-8d15-4fb6-ae02-13c0fc5dbfb3', variable: 'Settings_Maven')]) {
-                        retry(count: 3) {
-                            rtMavenRun(
-                                tool: "Maven 3.8.4", //id specified in Global Tool Configuration
-                                pom: 'pom.xml',
-                                goals: '-U -s $Settings_Maven clean compile',
-                            )
-                        }
-                    }
+    node(POD_LABEL) {
+        stage('Get a Maven project') {
+            git 'https://github.com/spring-projects/spring-petclinic.git'
+            container('maven') {
+                stage('Build a Maven project') {
+                    sh '''
+                    echo "maven build"
+                    '''
                 }
             }
-
-    stage('Test') {
-      agent {
-        label 'maven'
-      }
-      steps {
-        script {
-          try {
-            withMaven(maven: 'maven-3', globalMavenSettingsConfig: 'Settings_Maven', options: [ artifactsPublisher(disabled: true) ]) {
-              sh "mvn test"
-              //sh "echo test will be done later"
-            } 
-          } catch (exc) {
-            echo 'Tests failed'
-            currentBuild.result = 'FAILURE'
-          }
         }
-      }
+
+        stage('Get a Python Project') {
+            git url: 'https://github.com/hashicorp/terraform.git', branch: 'main'
+            container('python') {
+                stage('Build a Go project') {
+                    sh '''
+                    echo "Go Build"
+                    '''
+                }
+            }
+        }
+
     }
-  }
-}   
+}
