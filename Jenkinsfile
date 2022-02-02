@@ -15,7 +15,7 @@ pipeline {
             label "maven"
          }
          steps {
-            sh 'mvn clean compile'
+            sh 'mvn clean package'
          }
       }
       stage('Test') {
