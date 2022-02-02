@@ -18,12 +18,6 @@ pipeline {
             sh 'mvn clean package'
          }
       }
-      stage('Test') {
-         agent {
-            label "maven"
-         }
-         steps {
-            sh 'mvn test'
-         }
+      
       }
-}      
+     
