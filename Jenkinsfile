@@ -28,22 +28,33 @@ podTemplate(yaml: '''
               path: config.json
 ''') {
   node(POD_LABEL) {
-    stage('Get a Maven project') {
-      git url: 'https://github.com/scriptcamp/kubernetes-kaniko.git', branch: 'main'
-      container('maven') {
-        stage('Build a Maven project') {
-          sh '''
-          echo pwd
+    stage('Build Petclinic Java App') {
+      git url: 'https://github.com/devdatta2019/SampleWebApp.git', branch: 'main'
+        container('maven') {
+          sh 'mvn -B -ntp clean package'
+          echo "maven build"
           '''
         }
       }
     }
 
+node(POD_LABEL) {
+    stage('Test Petclinic Java App') {
+      git url: 'https://github.com/devdatta2019/SampleWebApp.git', branch: 'main'
+        container('maven') {
+          sh 'mvn test'
+          
+          
+        }
+      }
+    }
+
+
     stage('Build Java Image') {
       container('kaniko') {
         stage('Build a Go project') {
           sh '''
-            /kaniko/executor --context `pwd` --destination bibinwilson/hello-kaniko:1.0
+            /kaniko/executor --context `pwd` --destination devdatta1987/hello-kaniko:1.0
           '''
         }
       }
