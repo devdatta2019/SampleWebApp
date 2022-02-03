@@ -32,7 +32,7 @@ podTemplate(yaml: '''
       git url: 'https://github.com/devdatta2019/SampleWebApp.git', branch: 'main'
         container('maven') {
           sh 'mvn -B -ntp clean package'
-          echo "maven build"
+          
           '''
         }
       }
