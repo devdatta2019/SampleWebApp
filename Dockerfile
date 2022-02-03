@@ -1,5 +1,3 @@
-FROM tomcat 
-WORKDIR webapps 
-COPY target/WebApp.war .
-RUN rm -rf ROOT && mv WebApp.war ROOT.war
-ENTRYPOINT ["sh", "/usr/local/tomcat/bin/startup.sh"]
+FROM ubuntu:latest
+
+RUN apt-get update -y
