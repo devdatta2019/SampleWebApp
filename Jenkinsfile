@@ -24,4 +24,13 @@ podTemplate(containers: [
       }
     }
   }
-}
+   stage('Build Petclinic Java App') {
+      git url: 'https://github.com/spring-projects/spring-petclinic.git', branch: 'main'
+      container('maven') {
+        sh 'mvn -B -ntp test'
+      }
+    }
+  }
+
+  
+
