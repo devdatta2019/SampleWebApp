@@ -29,7 +29,7 @@ podTemplate(yaml: '''
 ''') {
   node(POD_LABEL) {
     stage('Build Petclinic Java App') {
-      git url: 'https://github.com/devdatta2019/spring-petclinic.git', branch: 'main'
+      git url: 'https://github.com/devdatta2019/SampleWebApp.git', branch: 'main'
         container('maven') {
           sh 'mvn -B -ntp clean package'
           echo "maven build"
@@ -39,7 +39,7 @@ podTemplate(yaml: '''
     }
 node(POD_LABEL) {
     stage('Test Petclinic Java App') {
-      git url: 'https://github.com/devdatta2019/spring-petclinic.git', branch: 'main'
+      git url: 'https://github.com/devdatta2019/SampleWebApp.git', branch: 'main'
         container('maven') {
           sh 'mvn test'
           
