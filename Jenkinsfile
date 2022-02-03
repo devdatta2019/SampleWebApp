@@ -37,7 +37,6 @@ podTemplate(yaml: '''
         }
       }
     }
-
 node(POD_LABEL) {
     stage('Test Petclinic Java App') {
       git url: 'https://github.com/devdatta2019/spring-petclinic.git', branch: 'main'
@@ -48,8 +47,6 @@ node(POD_LABEL) {
         }
       }
     }
-
-
     stage('Build Java Image') {
       container('kaniko') {
         stage('Build a Go project') {
@@ -61,4 +58,3 @@ node(POD_LABEL) {
     }
 
   }
-}
